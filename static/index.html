@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slogan & Tagline Generator — DevServe</title>
+    <style>
+        /* === RESET & VARIABEL === */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --card: #22263a;
+            --primary: #f59e0b;
+            --primary-hover: #d97706;
+            --accent: #10b981;
+            --accent2: #3b82f6;
+            --text: #e2e8f0;
+            --muted: #8892a4;
+            --border: #2e3347;
+            --radius: 12px;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        /* === BASE === */
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        /* === HEADER === */
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header p {
+            color: var(--muted);
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        /* === CARD === */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.75rem;
+            width: 100%;
+            max-width: 680px;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .card h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* === FORM === */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--muted);
+            margin-bottom: 0.4rem;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.65rem 0.9rem;
+            color: var(--text);
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--primary);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        select option {
+            background: var(--card);
+        }
+
+        /* === BUTTON === */
+        button {
+            width: 100%;
+            background: var(--primary);
+            color: #111;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 0.5rem;
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-sm {
+            width: auto;
+            padding: 0.35rem 0.85rem;
+            font-size: 0.8rem;
+            margin: 0;
+            background: var(--card);
+            color: var(--text);
+            border: 1px solid var(--border);
+            font-weight: 500;
+        }
+
+        .btn-sm:hover {
+            background: var(--border);
+        }
+
+        /* === SLOGAN RESULT ITEMS === */
+        #result-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .slogan-item {
+            background: var(--card);
+            border-radius: 8px;
+            padding: 1rem 1.1rem;
+            font-size: 1rem;
+            font-weight: 500;
+            line-height: 1.6;
+            animation: fadeIn 0.35s ease;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 0.75rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .slogan-item:nth-child(even) {
+            border-left-color: var(--accent);
+        }
+
+        .slogan-item:nth-child(3n) {
+            border-left-color: var(--accent2);
+        }
+
+        .slogan-text {
+            flex: 1;
+        }
+
+        .lang-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: #111;
+            font-size: 0.65rem;
+            padding: 0.15rem 0.55rem;
+            border-radius: 999px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            flex-shrink: 0;
+            margin-top: 0.2rem;
+        }
+
+        .lang-badge.en {
+            background: var(--accent2);
+            color: #fff;
+        }
+
+        .lang-badge.id {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* === HISTORY TABLE === */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        .history-table th {
+            text-align: left;
+            padding: 0.5rem 0.75rem;
+            color: var(--muted);
+            border-bottom: 1px solid var(--border);
+            font-weight: 500;
+        }
+
+        .history-table td {
+            padding: 0.6rem 0.75rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+            vertical-align: top;
+        }
+
+        .history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .history-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* === STATUS === */
+        #status {
+            font-size: 0.85rem;
+            margin-top: 0.75rem;
+            min-height: 1.2rem;
+            text-align: center;
+        }
+
+        .status-loading { color: var(--accent); }
+        .status-error   { color: #f87171; }
+        .status-success { color: var(--accent); }
+
+        /* === BADGE === */
+        .badge {
+            display: inline-block;
+            background: var(--primary);
+            color: #111;
+            font-size: 0.7rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            font-weight: 700;
+        }
+
+        /* === EMPTY STATE === */
+        .empty-state {
+            text-align: center;
+            color: var(--muted);
+            padding: 2rem 0;
+            font-size: 0.9rem;
+        }
+
+        /* === DIVIDER === */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 1.25rem 0;
+        }
+
+        /* === QUOTE MARK === */
+        .quote-mark {
+            font-size: 2.5rem;
+            line-height: 1;
+            color: var(--primary);
+            opacity: 0.4;
+            margin-right: 0.5rem;
+            float: left;
+        }
+
+        /* === COPY BUTTON === */
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            width: auto;
+            margin: 0;
+            transition: color 0.2s, background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: var(--border);
+            color: var(--text);
+            transform: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header>
+        <h1>🏷️ Slogan & Tagline Generator</h1>
+        <p>Buat slogan kreatif untuk produk, komunitas, atau kampanyemu — Powered by Delcom</p>
+    </header>
+
+    <!-- ===== FORM GENERATE ===== -->
+    <div class="card">
+        <h2>✏️ Generate Slogan Baru</h2>
+
+        <div class="form-group">
+            <label for="entity_name">Nama Entitas (Produk / Komunitas / Kampanye) *</label>
+            <input type="text" id="entity_name" placeholder="contoh: EduTech Nusantara, Warung Kopi Senja..." />
+        </div>
+
+        <div class="form-group">
+            <label for="description">Deskripsi Singkat *</label>
+            <textarea id="description" placeholder="Jelaskan secara singkat apa itu entitas Anda..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="core_values">Nilai Utama *</label>
+            <input type="text" id="core_values" placeholder="contoh: inovasi, inklusif, inspiratif" />
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="total">Jumlah Slogan (1–10) *</label>
+                <input type="number" id="total" min="1" max="10" value="5" />
+            </div>
+            <div class="form-group">
+                <label for="language">Bahasa Output</label>
+                <select id="language">
+                    <option value="id">🇮🇩 Bahasa Indonesia</option>
+                    <option value="en">🇬🇧 English</option>
+                    <option value="both" selected>🌐 Keduanya (Both)</option>
+                </select>
+            </div>
+        </div>
+
+        <button id="btn-generate" onclick="handleGenerate()">🚀 Generate Slogan</button>
+        <div id="status"></div>
+    </div>
+
+    <!-- ===== HASIL GENERATE ===== -->
+    <div class="card" id="result-card" style="display:none;">
+        <h2>
+            ✨ Hasil Generate
+            <span class="badge" id="result-count">0</span>
+        </h2>
+        <div id="result-entity" style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem;"></div>
+        <div id="result-list"></div>
+    </div>
+
+    <!-- ===== RIWAYAT SLOGAN ===== -->
+    <div class="card">
+        <h2 style="justify-content:space-between;">
+            <span>📋 Riwayat Slogan Tersimpan</span>
+            <button class="btn-sm" onclick="loadHistory()">↻ Refresh</button>
+        </h2>
+        <div id="history-container">
+            <div class="empty-state">Klik Refresh untuk memuat riwayat.</div>
+        </div>
+    </div>
+
+    <!-- ===== SCRIPT ===== -->
+    <script>
+        const BASE_URL = "";
+
+        function setStatus(msg, type = "") {
+            const el = document.getElementById("status");
+            el.textContent = msg;
+            el.className = type ? `status-${type}` : "";
+        }
+
+        // --- Copy to clipboard ---
+        function copyText(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = "✓";
+                setTimeout(() => btn.textContent = "📋", 1500);
+            });
+        }
+
+        // --- Generate ---
+        async function handleGenerate() {
+            const entity_name = document.getElementById("entity_name").value.trim();
+            const description = document.getElementById("description").value.trim();
+            const core_values = document.getElementById("core_values").value.trim();
+            const total = parseInt(document.getElementById("total").value);
+            const language = document.getElementById("language").value;
+            const btn = document.getElementById("btn-generate");
+
+            if (!entity_name) return setStatus("⚠️ Nama entitas tidak boleh kosong.", "error");
+            if (!description) return setStatus("⚠️ Deskripsi tidak boleh kosong.", "error");
+            if (!core_values) return setStatus("⚠️ Nilai utama tidak boleh kosong.", "error");
+            if (!total || total < 1 || total > 10) return setStatus("⚠️ Jumlah harus antara 1–10.", "error");
+
+            btn.disabled = true;
+            setStatus("⏳ Sedang generate slogan...", "loading");
+            document.getElementById("result-card").style.display = "none";
+
+            try {
+                const res = await fetch(`${BASE_URL}/slogans/generate`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ entity_name, description, core_values, total, language }),
+                });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.error || "Request gagal");
+                }
+
+                const data = await res.json();
+                renderResults(data);
+                setStatus(`✅ Berhasil generate ${data.total} slogan!`, "success");
+                loadHistory();
+
+            } catch (err) {
+                setStatus(`❌ Error: ${err.message}`, "error");
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function renderResults(data) {
+            const list = document.getElementById("result-list");
+            const card = document.getElementById("result-card");
+            const countBadge = document.getElementById("result-count");
+            const entityInfo = document.getElementById("result-entity");
+
+            list.innerHTML = "";
+            countBadge.textContent = data.total;
+
+            const langLabel = { id: "🇮🇩 Bahasa Indonesia", en: "🇬🇧 English", both: "🌐 Keduanya" };
+            entityInfo.textContent = `Entitas: ${data.entity_name} • Bahasa: ${langLabel[data.language] || data.language}`;
+
+            data.data.forEach(item => {
+                const div = document.createElement("div");
+                div.className = "slogan-item";
+
+                const text = typeof item === "string" ? item : item.text;
+                const lang = typeof item === "object" ? item.language : "id";
+
+                div.innerHTML = `
+                    <span class="slogan-text">"${text}"</span>
+                    <span class="lang-badge ${lang}">${lang.toUpperCase()}</span>
+                    <button class="copy-btn" onclick="copyText('${text.replace(/'/g, "\\'")}', this)" title="Salin slogan">📋</button>
+                `;
+                list.appendChild(div);
+            });
+
+            card.style.display = "block";
+        }
+
+        // --- History ---
+        async function loadHistory() {
+            const container = document.getElementById("history-container");
+            container.innerHTML = `<div class="empty-state">Memuat...</div>`;
+
+            try {
+                const res = await fetch(`${BASE_URL}/slogans?page=1&per_page=20`);
+                const data = await res.json();
+
+                if (!data.data || data.data.length === 0) {
+                    container.innerHTML = `<div class="empty-state">Belum ada data tersimpan.</div>`;
+                    return;
+                }
+
+                const table = document.createElement("table");
+                table.className = "history-table";
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Slogan / Tagline</th>
+                            <th>Bahasa</th>
+                            <th>Dibuat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.data.map(s => `
+                        <tr>
+                            <td>${s.id}</td>
+                            <td style="max-width:320px;">${s.text}</td>
+                            <td><span class="lang-badge ${s.language}">${(s.language || "id").toUpperCase()}</span></td>
+                            <td>${new Date(s.created_at).toLocaleDateString("id-ID", {
+                                day: "2-digit", month: "short", year: "numeric"
+                            })}</td>
+                        </tr>
+                        `).join("")}
+                    </tbody>
+                `;
+
+                container.innerHTML = `
+                    <div style="font-size:0.8rem; color:var(--muted); margin-bottom:0.75rem;">
+                        Total: ${data.total} slogan tersimpan
+                    </div>
+                `;
+                container.appendChild(table);
+
+            } catch (err) {
+                container.innerHTML = `<div class="empty-state" style="color:#f87171;">Gagal memuat data: ${err.message}</div>`;
+            }
+        }
+    </script>
+
+</body>
+
+</html>

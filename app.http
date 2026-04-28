@@ -1,0 +1,145 @@
+## Global Variables
+@baseurl=http://127.0.0.1:5000
+
+## ==============================
+## 1. Generate Slogan
+## ==============================
+# @name PostGenerateSlogan
+POST {{baseurl}}/slogans/generate
+Content-Type: application/json
+
+{
+  "entity_name": "EduTech Nusantara",
+  "description": "Platform belajar online untuk pelajar Indonesia",
+  "core_values": "inovasi, inklusif, inspiratif",
+  "total": 5,
+  "language": "both"
+}
+###
+
+## Response PostGenerateSlogan (contoh)
+# {
+#   "entity_name": "EduTech Nusantara",
+#   "language": "both",
+#   "total": 5,
+#   "data": [
+#     {"text": "Belajar Tanpa Batas, Meraih Tanpa Henti.", "language": "id"},
+#     {"text": "Empowering Every Student, Everywhere.", "language": "en"},
+#     {"text": "Ilmu untuk Semua, Masa Depan untuk Indonesia.", "language": "id"},
+#     {"text": "Learn Today. Lead Tomorrow.", "language": "en"},
+#     {"text": "Inspirasi dalam Setiap Klik.", "language": "id"}
+#   ]
+# }
+###
+
+## ==============================
+## 2. Generate Slogan (Bahasa Indonesia only)
+## ==============================
+# @name PostGenerateSloganID
+POST {{baseurl}}/slogans/generate
+Content-Type: application/json
+
+{
+  "entity_name": "Warung Kopi Senja",
+  "description": "Kedai kopi lokal dengan nuansa hangat dan tradisional",
+  "core_values": "kehangatan, keaslian, kebersamaan",
+  "total": 3,
+  "language": "id"
+}
+###
+
+## ==============================
+## 3. Generate Slogan (English only)
+## ==============================
+# @name PostGenerateSloganEN
+POST {{baseurl}}/slogans/generate
+Content-Type: application/json
+
+{
+  "entity_name": "GreenStep Community",
+  "description": "Environmental movement for a sustainable future",
+  "core_values": "sustainability, action, community",
+  "total": 4,
+  "language": "en"
+}
+###
+
+## ==============================
+## 4. Get All Slogans
+## ==============================
+# @name GetSlogans
+GET {{baseurl}}/slogans?page=1&per_page=10
+Content-Type: application/json
+###
+
+## Response GetSlogans (contoh)
+# {
+#   "page": 1,
+#   "per_page": 10,
+#   "total": 12,
+#   "total_pages": 2,
+#   "data": [
+#     {
+#       "id": 12,
+#       "text": "Inspirasi dalam Setiap Klik.",
+#       "language": "id",
+#       "request_id": 3,
+#       "created_at": "2026-04-24T10:35:12.123456"
+#     }
+#   ]
+# }
+###
+
+## ==============================
+## 5. Get Slogan by ID (Detail + Metadata)
+## ==============================
+# @name GetSloganDetail
+GET {{baseurl}}/slogans/1
+Content-Type: application/json
+###
+
+## Response GetSloganDetail (contoh)
+# {
+#   "id": 1,
+#   "text": "Belajar Tanpa Batas, Meraih Tanpa Henti.",
+#   "language": "id",
+#   "request_id": 1,
+#   "created_at": "2026-04-24T10:35:12.123456",
+#   "request": {
+#     "id": 1,
+#     "entity_name": "EduTech Nusantara",
+#     "description": "Platform belajar online untuk pelajar Indonesia",
+#     "core_values": "inovasi, inklusif, inspiratif",
+#     "language": "both",
+#     "created_at": "2026-04-24T10:35:10.000000"
+#   }
+# }
+###
+
+## ==============================
+## 6. Error Test — entity_name kosong
+## ==============================
+POST {{baseurl}}/slogans/generate
+Content-Type: application/json
+
+{
+  "entity_name": "",
+  "description": "Test",
+  "core_values": "Test",
+  "total": 3
+}
+###
+
+## ==============================
+## 7. Error Test — total melebihi 10
+## ==============================
+POST {{baseurl}}/slogans/generate
+Content-Type: application/json
+
+{
+  "entity_name": "Test Brand",
+  "description": "Test description",
+  "core_values": "Test values",
+  "total": 15
+}
+###
