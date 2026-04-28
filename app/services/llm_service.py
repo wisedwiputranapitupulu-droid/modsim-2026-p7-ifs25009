@@ -15,17 +15,28 @@ def generate_from_llm(prompt: str) -> str:
         ],
     }
 
-    response = requests.post(
-        f"{Config.BASE_URL}/chat/completions",
-        headers=headers,
-        json=data,
-    )
+    url = f"{Config.BASE_URL}/chat/completions"
+    try:
+        response = requests.post(
+            url,
+            headers=headers,
+            json=data,
+            timeout=20,
+        )
+    except requests.RequestException as e:
+        raise Exception(f"LLM request failed: {str(e)}") from e
 
     if response.status_code != 200:
-        print(f"LLM request failed with status {response.status_code}: {response.text}")
-        raise Exception("LLM request failed")
+        raise Exception(
+            f"LLM request failed with status {response.status_code}: {response.text}"
+        )
 
-    result = response.json()
+    try:
+        result = response.json()
+    except ValueError as e:
+        raise Exception(
+            f"LLM response could not be parsed as JSON: {response.text}"
+        ) from e
     if "choices" in result and len(result["choices"]) > 0:
         return result["choices"][0]["message"]["content"]
     else:
