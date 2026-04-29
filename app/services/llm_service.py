@@ -27,6 +27,13 @@ def generate_from_llm(prompt: str) -> str:
         raise Exception(f"LLM request failed: {str(e)}") from e
 
     if response.status_code != 200:
+        if response.status_code == 401:
+            raise Exception(
+                "LLM request failed with status 401: User not found. "
+                "Periksa LLM_TOKEN dan pastikan ini adalah API key OpenRouter "
+                "(prefix sk-or-v1-) untuk https://openrouter.ai/api/v1."
+            )
+
         raise Exception(
             f"LLM request failed with status {response.status_code}: {response.text}"
         )
